@@ -1,5 +1,5 @@
 #pragma once
+#include "ListNode.h"
 #include <string>
-#include "src/ListNode.h"
 
-ListNode* deserializerFromText(const std::string& filename);
+ListNode *deserializerFromText(const std::string &filename);

@@ -1,20 +1,34 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -O2
+CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g
+CPPFLAGS = -I.                    
 TARGET = serializer
-OBJS = main.o Serializer.o Deserializer.o
+BUILD_DIR = build
+
+SRCS = main.cpp src/Deserializer.cpp src/Serializer.cpp
+OBJS = $(addprefix $(BUILD_DIR)/, $(notdir $(SRCS:.cpp=.o)))
+
+$(shell mkdir -p $(BUILD_DIR))
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) -o $(TARGET)
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(BUILD_DIR)/main.o: main.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/Deserializer.o: src/Deserializer.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/Serializer.o: src/Serializer.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 run: $(TARGET)
-	./$(TARGET) inlet.in outlet.out
+	./$(TARGET)
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -rf $(BUILD_DIR) $(TARGET)
 
-.PHONY: all run clean
+rebuild: clean all
+
+.PHONY: all run clean rebuild
